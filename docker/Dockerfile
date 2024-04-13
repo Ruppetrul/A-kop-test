@@ -10,19 +10,26 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     netcat-openbsd \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql zip
+    && docker-php-ext-install -j$(nproc) gd pdo_pgsql zip
 
 COPY ./App /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap
 
 COPY ./App/.env.example /var/www/html/.env
+COPY docker/entrypoint.sh /var/www/html/docker/entrypoint.sh
 
 RUN composer install
 
 RUN php artisan key:generate
 
 RUN a2enmod rewrite
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /var/www/html/docker/entrypoint.sh
+CMD ["docker/entrypoint.sh"]
 
 EXPOSE 80
