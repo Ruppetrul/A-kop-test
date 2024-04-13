@@ -6,6 +6,8 @@ type Mutation {
     invite(input: InviteOrganizationInput!): InviteOrganizationPayload!
 
     inviteUser(input: InviteUserInput!): InviteUserPayload!
+
+    activateUser(input: ActivateUserInput!): Void
 }
 
 input InviteOrganizationInput {
@@ -26,4 +28,12 @@ input InviteUserInput {
 type InviteUserPayload {
     token: String
     errorMessage: String
+}
+
+input ActivateUserInput {
+    email: String!
+    name: String!
+    surname: String!
+    password: String!
+    jwt: String!
 }
