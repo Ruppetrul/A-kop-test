@@ -7,5 +7,6 @@ done
 
 php artisan migrate --force
 php artisan db:seed
+php artisan jwt:secret
 
 exec apache2-foreground
