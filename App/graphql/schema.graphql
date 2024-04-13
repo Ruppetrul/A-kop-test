@@ -3,15 +3,27 @@ type Query {
 }
 
 type Mutation {
-    invite(input: InviteOrganizationOwnerInput!): InviteOrganizationOwnerPayload!
+    invite(input: InviteOrganizationInput!): InviteOrganizationPayload!
+
+    inviteUser(input: InviteUserInput!): InviteUserPayload!
 }
 
-input InviteOrganizationOwnerInput {
+input InviteOrganizationInput {
     ownerEmail: String!
     organizationName: String!
 }
 
-type InviteOrganizationOwnerPayload {
+type InviteOrganizationPayload {
+    token: String
+    errorMessage: String
+}
+
+input InviteUserInput {
+    email: String!
+    roles: [Int!]!
+}
+
+type InviteUserPayload {
     token: String
     errorMessage: String
 }
