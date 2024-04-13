@@ -1,0 +1,17 @@
+type Query {
+    users: [User!]!
+}
+
+type Mutation {
+    invite(input: InviteOrganizationOwnerInput!): InviteOrganizationOwnerPayload!
+}
+
+input InviteOrganizationOwnerInput {
+    ownerEmail: String!
+    organizationName: String!
+}
+
+type InviteOrganizationOwnerPayload {
+    token: String
+    errorMessage: String
+}
