@@ -44,6 +44,11 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'users_companies_roles')->using(UserRoleCompany::class)->withPivot('role_id');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
