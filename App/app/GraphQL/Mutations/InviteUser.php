@@ -32,18 +32,16 @@ class inviteUser
 
             $user = User::firstOrCreate(['email' => $userEmail]);
 
-            if ($user->wasRecentlyCreated) {
-                $user->companies()->attach($companyId);
+            $user->companies()->syncWithoutDetaching([$companyId]);
 
-                if (is_array($roles) && !empty($roles)) {
-                    $companyRelation = UserCompany::where([
-                        'user_id'    => $user->id,
-                        'company_id' => $company->id,
-                    ])->first();
+            if (is_array($roles) && !empty($roles)) {
+                $companyRelation = UserCompany::where([
+                    'user_id'    => $user->id,
+                    'company_id' => $company->id,
+                ])->first();
 
-                    foreach($roles as $role) {
-                        $companyRelation->roles()->attach($role);
-                    }
+                foreach($roles as $role) {
+                    $companyRelation->roles()->syncWithoutDetaching([$role]);
                 }
             }
 

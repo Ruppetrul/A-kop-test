@@ -26,8 +26,8 @@ type LoginPayload {
 }
 
 type RolePairs {
-    company: Int
-    roles: [Int]
+    company_id: Int
+    role_ids: [Int]
 }
 
 #inviteCompany

@@ -40,22 +40,20 @@ class login
 
             foreach ($companiesResult as $company) {
                 $companies[] = $company->id;
-            }
 
-            $userCompaniesRelation = UserCompany::where([
-                'user_id'    => $user->id,
-                'company_id' => $company->id,
-            ])->get();
+                $userCompanyRelation = UserCompany::where([
+                    'user_id'    => $user->id,
+                    'company_id' => $company->id,
+                ])->first();
 
-            foreach ($userCompaniesRelation as $userCompanyRelation) {
-                $rolesResult = $userCompanyRelation->roles()->get();
-                $roleData = [];
-                foreach ($rolesResult as $role) {
-                    $roleData[$userCompanyRelation->company_id][] = $role->id;
-                }
+                if ($userCompanyRelation) {
+                    $rolesResult = $userCompanyRelation->roles()->get();
+                    $roleData = [];
+                    foreach ($rolesResult as $role) {
+                        $roleData[] = $role->id;
+                    }
 
-                foreach ($roleData as $company => $roleIds) {
-                    $roles[] = ['company' => $company, 'roles' => $roleIds];
+                    $roles[] = ['company_id' => $company->id, 'role_ids' => $roleData];
                 }
             }
 
@@ -63,9 +61,13 @@ class login
         } catch (AuthorizationException $e) {
             $code = 401;
             $jwtToken = null;
+            $roles = [];
+            $companies = [];
         } catch (Exception $e) {
             $code = 500;
             $jwtToken = null;
+            $roles = [];
+            $companies = [];
         } finally {
             DB::rollBack();
         }
