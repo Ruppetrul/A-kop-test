@@ -7,7 +7,7 @@ type Mutation {
 
     inviteUser(input: InviteUserInput!): InviteUserPayload!
 
-    activateUser(input: ActivateUserInput!): Void
+    activateUser(input: ActivateUserInput!): ActivateUserPayload!
 }
 
 #inviteCompany
