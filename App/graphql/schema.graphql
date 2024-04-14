@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-    invite(input: InviteOrganizationInput!): InviteOrganizationPayload!
+    inviteCompany(input: InviteOrganizationInput!): InviteOrganizationPayload!
 
     inviteUser(input: InviteUserInput!): InviteUserPayload!
 

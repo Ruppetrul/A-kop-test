@@ -9,8 +9,8 @@ class UserRoleCompany extends Pivot
     protected $table = 'users_companies_roles';
 
     protected $fillable = [
-        'user',
-        'company',
-        'role',
+        'user_id',
+        'company_id',
+        'role_id',
     ];
 }
