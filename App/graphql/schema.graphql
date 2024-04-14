@@ -22,12 +22,12 @@ type InviteOrganizationPayload {
 
 input InviteUserInput {
     email: String!
+    companyId: Int!
     roles: [Int!]!
 }
 
 type InviteUserPayload {
     token: String
-    errorMessage: String
 }
 
 input ActivateUserInput {

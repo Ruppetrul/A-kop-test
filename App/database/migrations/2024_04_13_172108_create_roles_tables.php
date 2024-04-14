@@ -27,6 +27,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('company_id');
             $table->integer('role_id');
+
+            $table->unique(['user_id', 'company_id', 'role_id']);
         });
     }
 
