@@ -18,7 +18,7 @@ input InviteCompanyInput {
 
 type InviteCompanyPayload {
     token: String
-    errorMessage: String
+    code: Int!
 }
 
 #inviteUser

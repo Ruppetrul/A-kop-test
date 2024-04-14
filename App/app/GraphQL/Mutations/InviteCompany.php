@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Invitation;
 use App\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\DB;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -13,7 +14,11 @@ class InviteCompany
 {
     public function __invoke($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        $code = 201;
+        $jwtToken = null;
         try {
+            DB::beginTransaction();
+
             $ownerEmail = $args['input']['ownerEmail'];
             $organizationName = $args['input']['organizationName'];
 
@@ -30,21 +35,29 @@ class InviteCompany
                 'jwt'   => $jwtToken,
             ]);
 
-            $company = Company::create(['owner_email' => $ownerEmail, 'name' => $organizationName]);
+            $company = Company::firstOrCreate(
+                ['owner_email' => $ownerEmail],
+                ['name' => $organizationName]
+            );
 
             if (!$invitation || !$company) {
                 throw new \Exception("Failed to create invitation or company.");
             }
 
-            $user->companies()->attach($company, ['role_id' => 2]);
+            if ($user->wasRecentlyCreated) {
+                $user->companies()->attach($company, ['role_id' => 2]);
+            }
 
-            return [
-                'token' => $jwtToken,
-            ];
+            DB::commit();
         } catch (\Exception $e) {
-            return [
-                'error' => $e->getMessage(),
-            ];
+            DB::rollBack();
+            $jwtToken = null;
+            $code = 500;
         }
+
+        return [
+            'token' => $jwtToken,
+            'code'  => $code
+        ];
     }
 }
