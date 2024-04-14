@@ -30,6 +30,7 @@ input InviteUserInput {
 
 type InviteUserPayload {
     token: String
+    code: Int!
 }
 
 #activateUser
@@ -39,4 +40,8 @@ input ActivateUserInput {
     surname: String!
     password: String!
     jwt: String!
+}
+
+type ActivateUserPayload {
+    code: Int!
 }
