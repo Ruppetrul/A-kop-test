@@ -3,11 +3,26 @@ type Query {
 }
 
 type Mutation {
+    login(input: loginInput!): LoginPayload!
+
     inviteCompany(input: InviteCompanyInput!): InviteCompanyPayload!
 
     inviteUser(input: InviteUserInput!): InviteUserPayload!
 
     activateUser(input: ActivateUserInput!): ActivateUserPayload!
+}
+
+#login
+input loginInput {
+    email: String!
+    password: String!
+}
+
+type LoginPayload {
+    token: String
+    code: Int!
+    organization: [Int!]!
+    roles: [Int!]!
 }
 
 #inviteCompany
