@@ -22,7 +22,12 @@ type LoginPayload {
     token: String
     code: Int!
     organization: [Int!]!
-    roles: [Int!]!
+    roles: [RolePairs!]!
+}
+
+type RolePairs {
+    company: Int
+    roles: [Int]
 }
 
 #inviteCompany
