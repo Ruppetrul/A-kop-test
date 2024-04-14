@@ -3,23 +3,25 @@ type Query {
 }
 
 type Mutation {
-    inviteCompany(input: InviteOrganizationInput!): InviteOrganizationPayload!
+    inviteCompany(input: InviteCompanyInput!): InviteCompanyPayload!
 
     inviteUser(input: InviteUserInput!): InviteUserPayload!
 
     activateUser(input: ActivateUserInput!): Void
 }
 
-input InviteOrganizationInput {
+#inviteCompany
+input InviteCompanyInput {
     ownerEmail: String!
     organizationName: String!
 }
 
-type InviteOrganizationPayload {
+type InviteCompanyPayload {
     token: String
     errorMessage: String
 }
 
+#inviteUser
 input InviteUserInput {
     email: String!
     companyId: Int!
@@ -30,6 +32,7 @@ type InviteUserPayload {
     token: String
 }
 
+#activateUser
 input ActivateUserInput {
     email: String!
     name: String!
