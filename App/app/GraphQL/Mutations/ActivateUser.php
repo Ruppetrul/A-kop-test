@@ -8,6 +8,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ActivateUser
 {
@@ -23,11 +24,10 @@ class ActivateUser
 
         try {
             DB::beginTransaction();
-            Invitation::where('email', $userEmail)
-                ->where('jwt', $jwt)
-                ->firstOrFail();
 
-            $user = User::firstOrNew(['email' => $userEmail]);
+            JWTAuth::setToken($jwt);
+            $user = JWTAuth::authenticate();
+
             if (!$user) {
                 throw new \Exception("User not found.");
             }
@@ -42,6 +42,7 @@ class ActivateUser
             }
             DB::commit();
         } catch (\Exception $e) {
+            echo $e->getMessage(); die();
             DB::rollBack();
             $code = 500;
         }
