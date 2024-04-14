@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin'),
         ]);
 
-        $admin->companies()->attach($company, ['role_id' => $adminRole->id]);
+        $admin->companiesRoles()->attach($company, ['role_id' => $adminRole->id]);
+        $admin->companies()->attach($company);
     }
 }

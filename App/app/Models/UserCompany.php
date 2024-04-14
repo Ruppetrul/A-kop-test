@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserRoleCompany extends Pivot
+class UserCompany extends Pivot
 {
-    protected $table = 'users_companies_roles';
+    protected $table = 'users_companies';
 
     public $timestamps = false;
 
     protected $fillable = [
         'user_id',
         'company_id',
-        'role_id',
     ];
 }

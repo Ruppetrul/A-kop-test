@@ -45,7 +45,7 @@ class InviteCompany
             }
 
             if ($user->wasRecentlyCreated) {
-                $user->companies()->attach($company, ['role_id' => 2]);
+                $user->companiesRoles()->attach($company, ['role_id' => 2]);
             }
 
             DB::commit();

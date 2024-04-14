@@ -5,10 +5,10 @@ namespace App\GraphQL\Mutations;
 use App\Models\Company;
 use App\Models\Invitation;
 use App\Models\User;
+use App\Models\UserCompany;
 use App\Models\UserRoleCompany;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -40,9 +40,14 @@ class inviteUser
                 ])->exists();
 
                 if (!$existRole) {
-                    $user->companies()->attach($company, ['role_id' => $role]);
+                    $user->companiesRoles()->attach($company, ['role_id' => $role]);
                 }
             }
+
+            UserCompany::firstOrCreate([
+                'user_id'    => $user->id,
+                'company_id' => $companyId,
+            ]);
 
             $jwtToken = JWTAuth::fromUser($user);
             Invitation::create([

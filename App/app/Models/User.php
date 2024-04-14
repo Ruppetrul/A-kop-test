@@ -48,6 +48,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function companies()
     {
+        return $this->belongsToMany(Company::class, 'users_companies');
+    }
+
+    public function companiesRoles()
+    {
         return $this->belongsToMany(Company::class, 'users_companies_roles')->using(UserRoleCompany::class)->withPivot('role_id');
     }
 

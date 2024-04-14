@@ -33,7 +33,7 @@ class login
             }
 
             $user = JWTAuth::user();
-            $userCompanies = $user->companies()->get();
+            $userCompanies = $user->companiesRoles()->get();
 
             $roleData = [];
             foreach($userCompanies as $company) {
