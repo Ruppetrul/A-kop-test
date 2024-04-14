@@ -23,14 +23,9 @@ class ActivateUser
 
         try {
             DB::beginTransaction();
-            $invitation = Invitation::find([
-                'email' => $userEmail,
-                'jwt'   => $jwt,
-            ]);
-
-            if (!$invitation) {
-                throw new \Exception("Invitation with such email adn jwt token not found.");
-            }
+            Invitation::where('email', $userEmail)
+                ->where('jwt', $jwt)
+                ->firstOrFail();
 
             $user = User::firstOrNew(['email' => $userEmail]);
             if (!$user) {
