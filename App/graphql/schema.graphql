@@ -21,7 +21,7 @@ input loginInput {
 type LoginPayload {
     token: String
     code: Int!
-    organization: [Int!]!
+    companies: [Int!]!
     roles: [RolePairs!]!
 }
 

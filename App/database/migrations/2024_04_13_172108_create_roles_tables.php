@@ -25,11 +25,10 @@ return new class extends Migration
 
         Schema::create('users_companies_roles', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('company_id');
+            $table->integer('user_company_id');
             $table->integer('role_id');
 
-            $table->unique(['user_id', 'company_id', 'role_id']);
+            $table->unique(['user_company_id', 'role_id']);
         });
     }
 

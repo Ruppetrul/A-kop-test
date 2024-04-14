@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\Company;
 use App\Models\Invitation;
 use App\Models\User;
+use App\Models\UserCompany;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\DB;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -45,7 +46,14 @@ class InviteCompany
             }
 
             if ($user->wasRecentlyCreated) {
-                $user->companiesRoles()->attach($company, ['role_id' => 2]);
+                $user->companies()->attach($company);
+
+                $companyRelation = UserCompany::where([
+                    'user_id'    => $user->id,
+                    'company_id' => $company->id,
+                ])->first();
+
+                $companyRelation->roles()->attach(2);
             }
 
             DB::commit();

@@ -11,8 +11,12 @@ class UserRoleCompany extends Pivot
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id',
-        'company_id',
+        'user_company_id',
         'role_id',
     ];
+
+    public function companiesRoles()
+    {
+        return $this->belongsTo(UserCompany::class);
+    }
 }

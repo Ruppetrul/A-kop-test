@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\UserCompany;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -16,6 +17,7 @@ class login
     {
         $code = 200;
         $roles = [];
+        $companies = [];
         $jwtToken = null;
 
         $email = $args['input']['email'];
@@ -33,16 +35,28 @@ class login
             }
 
             $user = JWTAuth::user();
-            $userCompanies = $user->companiesRoles()->get();
 
-            $roleData = [];
-            foreach($userCompanies as $company) {
-                $data = $company['pivot'];
-                $roleData[$data['company_id']][] = $data['role_id'];
+            $companiesResult = $user->companies()->get();
+
+            foreach ($companiesResult as $company) {
+                $companies[] = $company->id;
             }
 
-            foreach ($roleData as $company => $roleIds) {
-                $roles[] = ['company' => $company, 'roles' => $roleIds];
+            $userCompaniesRelation = UserCompany::where([
+                'user_id'    => $user->id,
+                'company_id' => $company->id,
+            ])->get();
+
+            foreach ($userCompaniesRelation as $userCompanyRelation) {
+                $rolesResult = $userCompanyRelation->roles()->get();
+                $roleData = [];
+                foreach ($rolesResult as $role) {
+                    $roleData[$userCompanyRelation->company_id][] = $role->id;
+                }
+
+                foreach ($roleData as $company => $roleIds) {
+                    $roles[] = ['company' => $company, 'roles' => $roleIds];
+                }
             }
 
             DB::commit();
@@ -57,9 +71,10 @@ class login
         }
 
         return [
-            'token' => $jwtToken,
-            'code'  => $code,
-            'roles' => $roles,
+            'token'     => $jwtToken,
+            'code'      => $code,
+            'roles'     => $roles,
+            'companies' => $companies,
         ];
     }
 }

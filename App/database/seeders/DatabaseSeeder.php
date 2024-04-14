@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserCompany;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,7 +30,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin'),
         ]);
 
-        $admin->companiesRoles()->attach($company, ['role_id' => $adminRole->id]);
         $admin->companies()->attach($company);
+
+        $companyRelation = UserCompany::where([
+            'user_id'    => $admin->id,
+            'company_id' => $company->id,
+        ])->first();
+
+        $companyRelation->roles()->attach($adminRole->id);
     }
 }

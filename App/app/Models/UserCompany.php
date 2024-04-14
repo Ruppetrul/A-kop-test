@@ -14,4 +14,9 @@ class UserCompany extends Pivot
         'user_id',
         'company_id',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'users_companies_roles', 'user_company_id', 'role_id');
+    }
 }

@@ -32,22 +32,20 @@ class inviteUser
 
             $user = User::firstOrCreate(['email' => $userEmail]);
 
-            foreach($roles as $role) {
-                $existRole = UserRoleCompany::where([
-                    'user_id'    => $user->id,
-                    'company_id' => $companyId,
-                    'role_id'    => $role,
-                ])->exists();
+            if ($user->wasRecentlyCreated) {
+                $user->companies()->attach($companyId);
 
-                if (!$existRole) {
-                    $user->companiesRoles()->attach($company, ['role_id' => $role]);
+                if (is_array($roles) && !empty($roles)) {
+                    $companyRelation = UserCompany::where([
+                        'user_id'    => $user->id,
+                        'company_id' => $company->id,
+                    ])->first();
+
+                    foreach($roles as $role) {
+                        $companyRelation->roles()->attach($role);
+                    }
                 }
             }
-
-            UserCompany::firstOrCreate([
-                'user_id'    => $user->id,
-                'company_id' => $companyId,
-            ]);
 
             $jwtToken = JWTAuth::fromUser($user);
             Invitation::create([
