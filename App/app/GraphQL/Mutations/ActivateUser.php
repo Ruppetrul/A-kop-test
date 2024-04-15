@@ -42,7 +42,6 @@ class ActivateUser
             }
             DB::commit();
         } catch (\Exception $e) {
-            echo $e->getMessage(); die();
             DB::rollBack();
             $code = 500;
         }
